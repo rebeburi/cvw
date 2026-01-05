@@ -83,7 +83,7 @@ int main(void)
 {
 	// test1();
 
-    cache_zero();
+    march_c_minus_single_way();
 
  	return 0;
 }

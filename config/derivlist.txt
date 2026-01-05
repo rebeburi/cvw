@@ -1500,6 +1500,50 @@ U_SUPPORTED             1
 ZICBOM_SUPPORTED        1
 ZICBOZ_SUPPORTED        1
 
+deriv   syn_polito_rv32gc_btb       bpred_GSHARE_6_16_10_1_rv32gc
+ZICSR_SUPPORTED         1
+E_SUPPORTED             0
+PMP_ENTRIES             16
+DTIM_RANGE              64'h1FF
+IROM_RANGE              64'hFFFF
+BOOTROM_RANGE           64'hFFFF
+UNCORE_RAM_RANGE        64'h1FFFFFFF
+U_SUPPORTED                1   
+S_SUPPORTED                0
+VIRTMEM_SUPPORTED          0
+SVINVAL_SUPPORTED          0
+SVADU_SUPPORTED            0
+SSTC_SUPPORTED             0
+BOOTROM_SUPPORTED          0
+CLINT_SUPPORTED            0
+GPIO_SUPPORTED             0
+UART_SUPPORTED             0
+PLIC_SUPPORTED             0
+SDC_SUPPORTED              0
+SPI_SUPPORTED              0
+D_SUPPORTED                0
+ZCD_SUPPORTED              0
+ZBKB_SUPPORTED             0
+ZBKC_SUPPORTED             0
+ZBKX_SUPPORTED             0
+ZKND_SUPPORTED             0
+ZKNE_SUPPORTED             0
+ZKNH_SUPPORTED             0
+ICACHE_SUPPORTED           0
+ZIFENCEI_SUPPORTED         0
+ZAAMO_SUPPORTED            0
+ZALRSC_SUPPORTED           0 
+ZICNTR_SUPPORTED           0
+ZIHPM_SUPPORTED            0
+BIGENDIAN_SUPPORTED        0
+ZICOND_SUPPORTED           0
+GPIO_LOOPBACK_TEST         0
+SPI_LOOPBACK_TEST          0
+BTB_SIZE                 32'd6
+DCACHE_WAYSIZEINBYTES    32'd256
+DCACHE_LINELENINBITS     32'd256
+DCACHE_NUMWAYS           32'd4
+
 # =========================================================
 # Custom FPU Derivative 
 # Based on syn_rv64gc (64-bit)

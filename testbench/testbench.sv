@@ -537,12 +537,19 @@ module testbench;
             $display("Error: Could not open file %s", memfilename);
             $finish;
           end
-          if (P.BOOTROM_SUPPORTED)
+`ifdef VCS_COMPILE_BOOTROM
+          // VCS still try to elaborate the access to the bootrom even if it is not defined
+          if (P.BOOTROM_SUPPORTED) begin
             readResult = $fread(dut.uncoregen.uncore.bootrom.bootrom.memory.ROM, memFile);
+            `ifdef GATE_LEVEL
+            readResult = $fread(dut.uncoregen_gate.uncore_gate.bootrom.bootrom.memory.ROM, memFile);
+            `endif  /*GATE_LEVEL*/
+          end 
           else begin
             $display("Buildroot test requires BOOTROM_SUPPORTED");
             $finish;
           end
+`endif /*VCS_COMPILE_BOOTROM*/
           $fclose(memFile);
           memFile = $fopen(memfilename, "rb");
           if (memFile == 0) begin
@@ -550,6 +557,9 @@ module testbench;
             $finish;
           end
           readResult = $fread(dut.uncoregen.uncore.ram.ram.memory.ram.RAM, memFile);
+          `ifdef GATE_LEVEL
+          readResult = $fread(dut.uncoregen_gate.uncore_gate.ram.ram.memory.ram.RAM, memFile);
+          `endif  /*GATE_LEVEL*/
           $fclose(memFile);
         end else if (TEST == "fpga") begin
           memFile = $fopen(bootmemfilename, "rb");
@@ -557,16 +567,25 @@ module testbench;
             $display("Error: Could not open file %s", memfilename);
             $finish;
           end
+`ifdef VCS_COMPILE_BOOTROM
+          // VCS still try to elaborate the access to the bootrom even if it is not defined
           if (P.BOOTROM_SUPPORTED) begin
             readResult = $fread(dut.uncoregen.uncore.bootrom.bootrom.memory.ROM, memFile);
+            `ifdef GATE_LEVEL
+            readResult = $fread(dut.uncoregen_gate.uncore_gate.bootrom.bootrom.memory.ROM, memFile);
+            `endif  /*GATE_LEVEL*/
           end
           $fclose(memFile);
+`endif /*VCS_COMPILE_BOOTROM*/
           memFile = $fopen(memfilename, "rb");
           if (memFile == 0) begin
             $display("Error: Could not open file %s", memfilename);
             $finish;
           end
           readResult = $fread(dut.uncoregen.uncore.ram.ram.memory.ram.RAM, memFile);
+          `ifdef GATE_LEVEL
+          readResult = $fread(dut.uncoregen_gate.uncore_gate.ram.ram.memory.ram.RAM, memFile);
+          `endif /*GATE_LEVEL*/
           $fclose(memFile);
         end else begin
           uncoreMemFile = $fopen(memfilename, "r");  // Is there a better way to test if a file exists?
@@ -576,6 +595,9 @@ module testbench;
           end else begin
             $fclose(uncoreMemFile);
             $readmemh(memfilename, dut.uncoregen.uncore.ram.ram.memory.ram.RAM);
+            `ifdef GATE_LEVEL
+            $readmemh(memfilename, dut.uncoregen_gate.uncore_gate.ram.ram.memory.ram.RAM);
+            `endif /*GATE_LEVEL*/
             `ifdef USE_TREK_DV
               -> trek_start;
               $display("starting Trek....");
@@ -591,6 +613,9 @@ module testbench;
         BaseIndex = P.UNCORE_RAM_BASE >> LogXLEN;
         for(ShadowIndex = StartIndex; ShadowIndex <= EndIndex; ShadowIndex++) begin
           testbench.DCacheFlushFSM.ShadowRAM[ShadowIndex] = dut.uncoregen.uncore.ram.ram.memory.ram.RAM[ShadowIndex - BaseIndex];
+          `ifdef GATE_LEVEL
+          testbench.DCacheFlushFSM.ShadowRAM[ShadowIndex] = dut.uncoregen_gate.uncore_gate.ram.ram.memory.ram.RAM[ShadowIndex - BaseIndex];
+          `endif /*GATE_LEVEL*/
         end
       end
     end
@@ -613,12 +638,18 @@ module testbench;
   end
 
   integer adrindex;
-  if (P.UNCORE_RAM_SUPPORTED)
-    always @(posedge clk)
-      if (ResetMem)  // program memory is sometimes reset (e.g. for CoreMark, which needs zeroed memory)
-        for (adrindex=0; adrindex<(P.UNCORE_RAM_RANGE>>1+(P.XLEN/32)); adrindex = adrindex+1)
+  if (P.UNCORE_RAM_SUPPORTED) begin
+    always @(posedge clk) begin 
+      if (ResetMem) begin // program memory is sometimes reset (e.g. for CoreMark, which needs zeroed memory) 
+        for (adrindex=0; adrindex<(P.UNCORE_RAM_RANGE>>1+(P.XLEN/32)); adrindex = adrindex+1) begin 
           dut.uncoregen.uncore.ram.ram.memory.ram.RAM[adrindex] = '0;
-
+          `ifdef GATE_LEVEL
+          dut.uncoregen_gate.uncore_gate.ram.ram.memory.ram.RAM[adrindex] = '0;
+          `endif /*GATE_LEVEL*/
+        end
+      end
+    end
+  end 
   ////////////////////////////////////////////////////////////////////////////////
   // Actual hardware
   ////////////////////////////////////////////////////////////////////////////////
@@ -733,6 +764,12 @@ module testbench;
           $fwrite(uartoutfile, "%c", dut.uncoregen.uncore.uartgen.uart.uartPC.Din); // append characters one at a time so we see a consistent log appearing during the run
           $fflush(uartoutfile);
         end
+        `ifdef GATE_LEVEL
+        if (~dut.uncoregen_gate.uncore_gate.uartgen.uart.MEMWb & dut.uncoregen_gate.uncore_gate.uartgen.uart.uartPC.A == 3'b000 & ~dut.uncoregen_gate.uncore_gate.uartgen.uart.uartPC.DLAB) begin
+          $fwrite(uartoutfile, "%c", dut.uncoregen_gate.uncore_gate.uartgen.uart.uartPC.Din); // append characters one at a time so we see a consistent log appearing during the run
+          $fflush(uartoutfile);
+        end
+        `endif /*GATE_LEVEL*/
       end
     end
   end
