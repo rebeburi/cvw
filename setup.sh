@@ -31,6 +31,7 @@ fi
 echo \$RISCV set to "${RISCV}"
 
 # Path to Wally repository
+
 WALLY=$(dirname "${BASH_SOURCE[0]:-$0}")
 WALLY=$(cd "$WALLY" && pwd)
 export WALLY
@@ -38,16 +39,20 @@ echo \$WALLY set to "${WALLY}"
 # utility functions in Wally repository
 export PATH=$WALLY/bin:$PATH
 
+export LIBRARY_SIM_PATH=/data/libraries/nangate45/NangateOpenCellLibrary.v
+echo \$LIBRARY_SIM_PATH set to "${LIBRARY_SIM_PATH}"
+
+
 # Verilator needs a larger core file size to simulate CORE-V Wally
 ulimit -c 300000
 
 # load site licenses and tool locations
-if [ -e "${RISCV}"/site-setup.sh ]; then
-    source "${RISCV}"/site-setup.sh
-else
-    echo -e "${FAIL_COLOR}site-setup.sh not found in \$RISCV directory. Rerun wally-toolchain-install.sh to automatically download it.${ENDC}"
-    return 1
-fi
+#if [ -e "${RISCV}"/site-setup.sh ]; then
+#    source "${RISCV}"/site-setup.sh
+#else
+#    echo -e "${FAIL_COLOR}site-setup.sh not found in \$RISCV directory. Rerun wally-toolchain-install.sh to automatically download it.${ENDC}"
+#    return 1
+#fi
 
 if [ ! -e "${WALLY}/.git/hooks/pre-commit" ]; then
     pushd "${WALLY}" || return 1

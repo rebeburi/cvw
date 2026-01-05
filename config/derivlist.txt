@@ -1499,3 +1499,44 @@ ICACHE_SUPPORTED        1
 U_SUPPORTED             1
 ZICBOM_SUPPORTED        1
 ZICBOZ_SUPPORTED        1
+
+# =========================================================
+# Custom FPU Derivative 
+# Based on syn_rv64gc (64-bit)
+# =========================================================
+deriv fpu_test syn_rv64gc
+
+# --- CRITICAL CACHE FIXES ---
+ZICBOM_SUPPORTED    0
+ZICBOZ_SUPPORTED    0  
+ZICBOP_SUPPORTED    0  
+ZICCLSM_SUPPORTED   0 
+
+# --- DISABLE Caches ---
+ICACHE_SUPPORTED    0
+DCACHE_SUPPORTED    0
+VIRTMEM_SUPPORTED   0
+SVINVAL_SUPPORTED   0
+SVPBMT_SUPPORTED    0
+SVNAPOT_SUPPORTED   0
+SVADU_SUPPORTED     0
+
+# --- DISABLE Logic ---
+BPRED_SUPPORTED     0
+BTB_SIZE            32'd0
+ZAAMO_SUPPORTED     0
+ZALRSC_SUPPORTED    0
+SSTC_SUPPORTED      0
+S_SUPPORTED         0
+U_SUPPORTED         0
+
+PMP_ENTRIES         32'd16  
+
+UNCORE_RAM_RANGE    64'h1FFFFFFF  
+DTIM_RANGE          64'h1FF
+IROM_RANGE          64'hFFFF
+BOOTROM_RANGE       64'hFFFF
+
+F_SUPPORTED         1
+D_SUPPORTED         1
+ZICSR_SUPPORTED     1        
