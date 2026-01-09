@@ -156,4 +156,3 @@ endmodule
 //  forever #40000 $fs_strobe(riscv_core.core_busy_o);
 //end
 //
-

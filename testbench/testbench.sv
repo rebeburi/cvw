@@ -283,6 +283,8 @@ module testbench;
       $dumpvars(1, dut.core.MTimerInt, dut.core.MExtInt, dut.core.SExtInt, dut.core.MSwInt, dut.core.MTIME_CLINT, dut.core.HRDATA, dut.core.HREADY, dut.core.HRESP, dut.core.HCLK, dut.core.HRESETn, dut.core.HADDR, dut.core.HWDATA, dut.core.HWSTRB, dut.core.HWRITE, dut.core.HSIZE, dut.core.HBURST, dut.core.HPROT, dut.core.HTRANS, dut.core.HMASTLOCK, dut.core.ExternalStall);
 `ifdef GATE_LEVEL
       $dumpports(dut.core_gate,"core_gate.vcd");
+      // Notice the space after "\fpu.fpu"
+      $dumpports(dut.core_gate.\fpu.fpu , "fpu.vcd");
 `endif /*GATE_LEVEL*/
     end
   end // initial begin
