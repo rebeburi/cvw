@@ -1,54 +1,51 @@
 .section .text
-.global test1
-.type test1, @function
+.global fpu_stress_test
 
-test1:
-	# ABI prologue
-	addi sp, sp, -112     # allocate 112 bytes on the stack
-	sw ra, 104(sp)        # save return address
-	sw s0, 96(sp)         # save callee-saved registers
-	sw s1, 88(sp)
-	sw s2, 80(sp)
-	sw s3, 72(sp)
-	sw s4, 64(sp)
-	sw s5, 56(sp)
-	sw s6, 48(sp)
-	sw s7, 40(sp)
-	sw s8, 32(sp)
-	sw s9, 24(sp)
-	sw s10, 16(sp)
-	sw s11, 8(sp)
-	addi s0, sp, 112     # set up s0 to point to start of stack frame
+fpu_stress_test:
+    # --- Initialization ---
+    li      t0, 0xACE1          # LFSR Seed
+    li      t1, 500            # Loop counter (Increase for higher coverage)
+    li      a0, 0               # Master Checksum (Observability)
+    li      t3, 0xEDB88320      # Polynomial Taps
+    
+    # Load 1.0 into f10 as a starting accumulator value
+    li      t2, 0x3F800000
+    fmv.w.x f10, t2
 
+fpu_loop:
+    # --- 1. LFSR Logic (Generate random bits in t0) ---
+    srli    t4, t0, 1
+    andi    t5, t0, 1
+    beqz    t5, skip_xor
+    xor     t4, t4, t3
+skip_xor:
+    mv      t0, t4              
+    
+    # --- 2. Controllability (Input to FPU) ---
+    fmv.w.x f1, t0              # Operand A: Random pattern from LFSR
+    fadd.s  f2, f1, f1          # Operand B: Derived from A
 
-    # You can write your code here 
+    # --- 3. The New Stress Instructions ---
+    # These target the 0.04% coverage areas you saw in your report
+    fdiv.s  f11, f1, f2         # Stresses the Divider
+    fsqrt.s f12, f1             # Stresses the Square Root
+    fmadd.s f10, f1, f2, f10    # Stresses the FMA (Multiply-Add)
 
-    li a0, 0xCAFECAFE    # return value
+    # --- 4. Observability (Propagation to a0) ---
+    # We XOR every result into a0. If a fault changes even 1 bit 
+    # in any of these units, a0 will be corrupted at the strobe point.
+    
+    fmv.x.w t6, f11             # Observe Divider
+    xor     a0, a0, t6          
+    
+    fmv.x.w t6, f12             # Observe Square Root
+    xor     a0, a0, t6          
+    
+    fmv.x.w t6, f10             # Observe FMA
+    xor     a0, a0, t6          
+    
+    # --- Loop Control ---
+    addi    t1, t1, -1
+    bnez    t1, fpu_loop
 
-
-    # ABI epilogue
-	lw s11, 8(sp)        # restore callee-saved registers
-	lw s10, 16(sp)
-	lw s9, 24(sp)
-	lw s8, 32(sp)
-	lw s7, 40(sp)
-	lw s6, 48(sp)
-	lw s5, 56(sp)
-	lw s4, 64(sp)
-	lw s3, 72(sp)
-	lw s2, 80(sp)
-	lw s1, 88(sp)
-	lw s0, 96(sp)
-	lw ra, 104(sp)       # restore return address
-	addi sp, sp, 112     # deallocate stack space
-	jr ra                # return to caller
-
-
-
-# READ/WRITE VARIABLES
-
-.section .data
-
-# READ-ONLY VARIABLES
-
-.section .rodata
+    ret                         # Final a0 is the result for main.c

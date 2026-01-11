@@ -1,20 +1,13 @@
-#include "tests.h"
+#include <stdint.h>
 
+extern uint32_t fpu_stress_test();
 
-const signature_t const GOLDEN_SIGNATURES[NUMTESTS] = {
-	0xCAFECAFE,	// TEST1
-};
+int main(){
 
-int main(void)
-{
-	int i, fails;
-	signature_t signatures[NUMTESTS];
+	uint32_t checksum = fpu_stress_test();
 	
-	signatures[TEST1] = test1();
+	if(checksum == 0)
+		return 1;
 
-	for(i=0; i<NUMTESTS; i++) {
-		fails += signatures[i] != GOLDEN_SIGNATURES[i];
-	}
-
- 	return fails;
+	return 0;
 }

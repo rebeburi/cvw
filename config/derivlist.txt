@@ -1543,3 +1543,93 @@ BTB_SIZE                 32'd6
 DCACHE_WAYSIZEINBYTES    32'd256
 DCACHE_LINELENINBITS     32'd256
 DCACHE_NUMWAYS           32'd4
+
+# =========================================================
+# Custom FPU Derivative 
+# Based on syn_rv64gc (64-bit)
+# =========================================================
+deriv fpu_test syn_rv64gc
+
+# --- CRITICAL CACHE FIXES ---
+ZICBOM_SUPPORTED    0
+ZICBOZ_SUPPORTED    0  
+ZICBOP_SUPPORTED    0  
+ZICCLSM_SUPPORTED   0 
+
+# --- DISABLE Caches ---
+ICACHE_SUPPORTED    0
+DCACHE_SUPPORTED    0
+VIRTMEM_SUPPORTED   0
+SVINVAL_SUPPORTED   0
+SVPBMT_SUPPORTED    0
+SVNAPOT_SUPPORTED   0
+SVADU_SUPPORTED     0
+
+# --- DISABLE Logic ---
+BPRED_SUPPORTED     0
+BTB_SIZE            32'd0
+ZAAMO_SUPPORTED     0
+ZALRSC_SUPPORTED    0
+SSTC_SUPPORTED      0
+S_SUPPORTED         0
+U_SUPPORTED         0
+
+PMP_ENTRIES         32'd16  
+
+UNCORE_RAM_RANGE    64'h1FFFFFFF  
+DTIM_RANGE          64'h1FF
+IROM_RANGE          64'hFFFF
+BOOTROM_RANGE       64'hFFFF
+
+F_SUPPORTED         1
+D_SUPPORTED         1
+ZICSR_SUPPORTED     1        
+
+# =========================================================
+# Custom FPU SBST Derivative
+# Targeted for high SAF/TDF coverage on RV32GC FPU logic
+# =========================================================
+deriv fpu_test_32gc rv32gc
+
+# --- Disable Memory System Complexity ---
+ICACHE_SUPPORTED     0
+DCACHE_SUPPORTED     0
+VIRTMEM_SUPPORTED    0
+ZICBOM_SUPPORTED     0
+ZICBOZ_SUPPORTED     0
+ZICBOP_SUPPORTED     0
+ZICCLSM_SUPPORTED    0
+ZCD_SUPPORTED	     0
+
+# --- Disable Pipeline Noise & Speculation ---
+BPRED_SUPPORTED      0
+BTB_SIZE             32'd0
+S_SUPPORTED          0
+U_SUPPORTED          0
+SSTC_SUPPORTED       0
+
+# --- Simplify Atomic & Peripheral Logic ---
+ZAAMO_SUPPORTED      0
+ZALRSC_SUPPORTED     0
+M_SUPPORTED 	     0
+PMP_ENTRIES          32'd0
+
+# --- Deterministic Memory Ranges ---
+UNCORE_RAM_RANGE     64'h0000FFFF
+DTIM_RANGE           64'h0
+IROM_RANGE           64'h0
+BOOTROM_RANGE        64'h00000FFF
+
+# --- Ensure FPU Logic is Active ---
+F_SUPPORTED          1
+D_SUPPORTED          0	
+ZICSR_SUPPORTED      1
+
+# --- DISABLE Supervisor extensions that require Virtual Memory ---
+SVINVAL_SUPPORTED    0
+SVADU_SUPPORTED      0
+SVPBMT_SUPPORTED     0
+SVNAPOT_SUPPORTED    0
+
+# --- Ensure Virtual Memory is definitely off ---
+VIRTMEM_SUPPORTED    0

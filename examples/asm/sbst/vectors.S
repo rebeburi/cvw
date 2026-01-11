@@ -1,4 +1,3 @@
-
 .section .vectors, "ax"
 .option norvc
 vector_table:
@@ -65,21 +64,12 @@ vector_table:
 	j __no_irq_handler
 	j __no_irq_handler
 	j __no_irq_handler
-	j __no_irq_handler
-
-/* this is fixed to 0x8000, used for PULP_SECURE=0. We redirect this entry to the
-new vector table (which is at mtvec) */
-/* .section .legacy_irq, "ax" */
-/*	j vector_table */
-/*	j __no_irq_handler */
-/*	j __no_irq_handler */
-/*	j __no_irq_handler */
 
 .section .text.vecs
 /* exception handling */
 __no_irq_handler:
-	la a0, no_exception_handler_msg
-	jal ra, puts
+	/* la a0, no_exception_handler_msg */
+	/* jal ra, puts */  /* <--- REMOVED */
 	j __no_irq_handler
 
 
@@ -96,23 +86,24 @@ sw_irq_handler:
 	j handle_unknown
 
 handle_ecall:
-	la a0, ecall_msg
-	jal ra, puts
+	/* la a0, ecall_msg */
+	/* jal ra, puts */  /* <--- REMOVED */
 	j end_handler
 
 handle_ebreak:
-	la a0, ebreak_msg
-	jal ra, puts
+	/* la a0, ebreak_msg */
+	/* jal ra, puts */  /* <--- REMOVED */
 	j end_handler
 
 handle_illegal_insn:
-	la a0, illegal_insn_msg
-	jal ra, puts
-	j end_handler
+	/* la a0, illegal_insn_msg */
+	/* jal ra, puts */  /* <--- REMOVED */
+    /* If we get here, FPU config is likely wrong. Loop forever to debug. */
+	j . 
 
 handle_unknown:
-	la a0, unknown_msg
-	jal ra, puts
+	/* la a0, unknown_msg */
+	/* jal ra, puts */  /* <--- REMOVED */
 	j end_handler
 
 end_handler:
@@ -120,11 +111,13 @@ end_handler:
 	addi a0, a0, 4
 	csrw mepc, a0
 	mret
-/* this interrupt can be generated for verification purposes, random or when the PC is equal to a given value*/
+
+/* this interrupt can be generated for verification purposes */
 verification_irq_handler:
 	mret
 
 .section .rodata
+/* Strings are kept but unused, so linker won't complain */
 illegal_insn_msg:
 	.string "illegal instruction exception handler entered\n"
 ecall_msg:
