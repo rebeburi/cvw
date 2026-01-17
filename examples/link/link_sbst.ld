@@ -15,7 +15,7 @@ OUTPUT_ARCH( "riscv" )
 ENTRY(_start)
 
 
-__stack_size = 0x00400;
+__stack_size = 0x800;
 /*----------------------------------------------------------------------*/
 /* Sections                                                             */
 /*----------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ SECTIONS
   .stack         : ALIGN(16) /* this is a requirement of the ABI(?) */
   {
    PROVIDE(__stack_start = .);
-   . = __stack_size;
+   . = . + __stack_size;
    PROVIDE(_sp = .);
    PROVIDE(__stack_end = .);
   } 

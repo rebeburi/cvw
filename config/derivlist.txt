@@ -1584,3 +1584,52 @@ BOOTROM_RANGE       64'hFFFF
 F_SUPPORTED         1
 D_SUPPORTED         1
 ZICSR_SUPPORTED     1        
+
+# =========================================================
+# Custom FPU SBST Derivative
+# =========================================================
+deriv fpu_test1 rv32gc
+
+# --- Disable Memory System Complexity ---
+ICACHE_SUPPORTED     0
+DCACHE_SUPPORTED     1
+VIRTMEM_SUPPORTED    0
+ZICBOM_SUPPORTED     0
+ZICBOZ_SUPPORTED     0
+ZICBOP_SUPPORTED     0
+ZICCLSM_SUPPORTED    0
+ZCD_SUPPORTED	     0
+
+# --- Disable Pipeline Noise & Speculation ---
+BPRED_SUPPORTED      0
+BTB_SIZE             32'd0
+S_SUPPORTED          0
+U_SUPPORTED          0
+SSTC_SUPPORTED       0
+
+# --- Simplify Atomic & Peripheral Logic ---
+ZAAMO_SUPPORTED      0
+ZALRSC_SUPPORTED     0
+M_SUPPORTED 	     0
+PMP_ENTRIES          32'd0
+
+# --- Memory Ranges ---
+UNCORE_RAM_RANGE     64'h07FFFFFF  
+DTIM_RANGE           64'h0
+IROM_RANGE           64'h0
+BOOTROM_RANGE        64'h00000FFF
+
+# --- Ensure FPU Logic is Active ---
+F_SUPPORTED          1
+D_SUPPORTED          1   
+ZFH_SUPPORTED        1
+ZICSR_SUPPORTED      1
+
+# --- DISABLE Supervisor extensions that require Virtual Memory ---
+SVINVAL_SUPPORTED    0
+SVADU_SUPPORTED      0
+SVPBMT_SUPPORTED     0
+SVNAPOT_SUPPORTED    0
+
+# --- Ensure Virtual Memory is definitely off ---
+VIRTMEM_SUPPORTED    0

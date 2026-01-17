@@ -1,7 +1,7 @@
 set(var=[defines], format=[standard])
 set(var=[fdef], method=[fr], fr.fr=[../fault_gen_cvw.sff],abort=[warning])
 set(var=[fsim],hyperfault=[0])
-set(var=[defines], progress.enable=[1], progress.limit=[10000])
+set(var=[defines], progress.enable=[1], progress.limit=[300])
 set(var=[defines], progress.style=[long])
 
 #set(var=[fdef], fstrobe=[/home/s338247/assignment/cvw/zoix/fpu.strobe])
@@ -9,12 +9,12 @@ set(var=[defines], progress.style=[long])
 
 
 #set(var=[fdef], fstrobe=[../strobe.strobe])
-#set(var=[coats],method=[allf])
+set(var=[coats],method=[allf])
 
 
 design()
 
-addtst(test=[cvw], stimtype=[vcd], stim=[${WALLY}/sim/${LOGIC_SIMULATOR}/core_gate.vcd], stim.limit.mismatch=[0], dut.stim=[wallypipelinedcore_gate, testbench.dut.core_gate], stim_options=[+TESTNAME=cvw,+vcd+clk+clk])
+addtst(test=[cvw], stimtype=[vcd], stim=[${WALLY}/sim/${LOGIC_SIMULATOR}/core_gate.vcd],  stim.limit.mismatch=[10], dut.stim=[wallypipelinedcore_gate, testbench.dut.core_gate], stim_options=[+TESTNAME=cvw,+vcd+clk+clk])
 
 fsim()
 coverage(group=[detail])

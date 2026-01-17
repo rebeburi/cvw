@@ -1056,7 +1056,7 @@ module readvectors import cvw::*; #(parameter cvw_t P) (
   logic XEn;
   logic YEn;
   logic ZEn;
-  logic FPUActive;
+  logic Active;
 
   // apply test vectors on rising edge of clk
   // Format of vectors Inputs(1/2/3)_AnsFlg
