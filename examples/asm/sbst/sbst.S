@@ -219,7 +219,6 @@ process_next_pair:
 .align 3
 
 input_vectors:
-    # --- PART 1: The "Grinder" Manual Corners (16 Pairs) ---
     .double 3.14159, 2.71828        
     .double 1.23456789, 1.23456788  
     .long 0xFFFFFFFF, 0x7FEFFFFF    
